@@ -1,0 +1,45 @@
+# {{ ansible_managed }}
+
+[INCLUDES]
+after  = paths-overrides.local
+
+[DEFAULT]
+apache_access_log = /var/log/apache2/*access.log
+apache_error_log = /var/log/apache2/*error.log
+auditd_log = /var/log/audit/audit.log
+default_backend = %(default/backend)s
+dovecot_backend = %(default_backend)s
+dovecot_log = %(syslog_mail_warn)s
+dropbear_backend = %(default_backend)s
+dropbear_log = %(syslog_authpriv)s
+exim_main_log = /var/log/exim/mainlog
+ignorecommands_dir = /etc/fail2ban/filter.d/ignorecommands
+lighttpd_error_log = /var/log/lighttpd/error.log
+mysql_backend = %(default_backend)s
+mysql_log = %(syslog_daemon)s
+nginx_access_log = /var/log/nginx/*access.log
+nginx_error_log = /var/log/nginx/*error.log
+postfix_backend = %(default_backend)s
+postfix_log = %(syslog_mail_warn)s
+proftpd_backend = %(default_backend)s
+proftpd_log = %(syslog_ftp)s
+pureftpd_backend = %(default_backend)s
+pureftpd_log = %(syslog_ftp)s
+roundcube_errors_log = /var/log/roundcube/errors
+solidpop3d_log = %(syslog_local0)s
+sshd_backend = %(default_backend)s
+sshd_log = %(syslog_authpriv)s
+syslog_authpriv = /var/log/auth.log
+syslog_backend = %(default_backend)s
+syslog_daemon  = %(syslog_local0)s
+syslog_ftp = %(syslog_local0)s
+syslog_local0 = /var/log/messages
+syslog_mail =
+syslog_mail_warn =
+syslog_user = %(syslog_local0)s
+vsftpd_log = /var/log/vsftpd.log
+wuftpd_backend = %(default_backend)s
+wuftpd_log = %(syslog_ftp)s
+suhosin_log = %(syslog_user)s
+              %(lighttpd_error_log)s
+

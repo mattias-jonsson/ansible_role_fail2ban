@@ -1,0 +1,14 @@
+---
+
+- name: install fail2ban packages
+  become: true
+  ansible.builtin.package:
+    name: '{{ ansible_role_fail2ban_packages }}'
+    state: present
+
+- name: enable fail2ban service
+  become: true
+  ansible.builtin.service:
+    name: fail2ban
+    enabled: true
+    state: started

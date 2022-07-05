@@ -1,0 +1,5 @@
+---
+
+ansible_role_fail2ban_packages:
+  - fail2ban
+  - fail2ban-selinux
