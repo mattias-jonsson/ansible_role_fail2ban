@@ -1,0 +1,147 @@
+---
+
+- name: install fail2ban.conf from template
+  become: true
+  ansible.builtin.template:
+    src: fail2ban.conf.j2
+    dest: /etc/fail2ban/fail2ban.conf
+    mode: 0644
+    owner: root
+    group: root
+
+- name: install jail.local from template
+  become: true
+  ansible.builtin.template:
+    src: jail.local.j2
+    dest: /etc/fail2ban/jail.local
+    mode: 0644
+    owner: root
+    group: root
+  notify: restart fail2ban
+
+- name: install paths-commmon from template
+  become: true
+  ansible.builtin.template:
+    src: "paths-common.conf.j2"
+    dest: /etc/fail2ban/paths-common.conf
+    mode: 0644
+    owner: root
+    group: root
+  notify: restart fail2ban
+
+- name: install paths-fedora.conf from template
+  become: true
+  ansible.builtin.template:
+    src: paths-fedora.conf.j2
+    dest: /etc/fail2ban/paths-fedora.conf
+    mode: 0644
+    owner: root
+    group: root
+  when: ansible_os_family  == "RedHat"
+  notify: restart fail2ban
+
+
+- name: block for Debian based distributions
+  block:
+
+    - name: install paths-debian.conf from template
+      become: true
+      ansible.builtin.template:
+        src: paths-debian.conf.j2
+        dest: /etc/fail2ban/paths-debian.conf
+        mode: 0644
+        owner: root
+        group: root
+      notify: restart fail2ban
+
+    - name: install paths-opensuse.conf from template
+      become: true
+      ansible.builtin.template:
+        src: paths-opensuse.conf.j2
+        dest: /etc/fail2ban/paths-opensuse.conf
+        mode: 0644
+        owner: root
+        group: root
+      notify: restart fail2ban
+
+    - name: install paths-arch.conf from template
+      become: true
+      ansible.builtin.template:
+        src: paths-arch.conf.j2
+        dest: /etc/fail2ban/paths-arch.conf
+        mode: 0644
+        owner: root
+        group: root
+      notify: restart fail2ban
+
+  when: ansible_os_family  == "Debian"
+
+
+- name: install paths-overrides.local from template
+  become: true
+  ansible.builtin.template:
+    src: paths-overrides.local.j2
+    dest: /etc/fail2ban/paths-overrides.local
+    mode: 0644
+    owner: root
+    group: root
+  notify: restart fail2ban
+
+- name: install jail.conf from template
+  become: true
+  ansible.builtin.template:
+    src: "jail.conf.j2"
+    dest: /etc/fail2ban/jail.conf
+    mode: 0644
+    owner: root
+    group: root
+  notify: restart fail2ban
+
+- name: install jail.d templates from variables
+  become: true
+  ansible.builtin.template:
+    src: jail.d.local.j2
+    dest: /etc/fail2ban/jail.d/{{ item.name | lower }}.local
+    mode: 0644
+    owner: root
+    group: root
+  with_items: "{{ ansible_role_fail2ban_jails }}"
+  when: item.enabled | lower | bool
+  notify: restart fail2ban
+  register: ansible_role_fail2ban_jaildconfigs
+
+
+- name: block for cleanup
+  block:
+    - name: create list of jails
+      ansible.builtin.set_fact:
+        ansible_role_fail2ban_cleanup_exclude: "{{ ansible_role_fail2ban_cleanup_exclude }} + [ '/etc/fail2ban/jail.d/{{ item.name | lower }}.local' ]"
+      with_items: "{{ ansible_role_fail2ban_jails }}"
+      when: item.enabled | lower | bool
+      vars:
+        ansible_role_fail2ban_cleanup_exclude: []
+
+    - name: build list of unwanted files in conf.d directories
+      become: true
+      ansible.builtin.find:
+        paths: 
+          - /etc/fail2ban/fail2ban.d
+          - /etc/fail2ban/jail.d
+        file_type: any
+        patterns: 
+          - .*\.conf$
+          - .*\.local$
+        use_regex: yes
+      register: ansible_role_fail2ban_unwanted_configs
+
+    - name: create cleanup-list
+      ansible.builtin.set_fact: 
+        ansible_role_fail2ban_cleanup_list: "{{ ansible_role_fail2ban_unwanted_configs['files'] | json_query('[*].path') | list | difference(ansible_role_fail2ban_cleanup_exclude | list ) }}"
+
+    - name: cleanup conf.d directories
+      become: true
+      ansible.builtin.shell: mv "{{ item }}" "{{ item | dirname }}/{{ item | basename }}.{{ 99999 | random }}.{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S')}}.disabled"
+      with_items: "{{ ansible_role_fail2ban_cleanup_list }}"
+      when: ansible_role_fail2ban_cleanup_list | length > 0
+      notify: restart fail2ban
+  when: ansible_role_fail2ban_cleanup | lower | bool

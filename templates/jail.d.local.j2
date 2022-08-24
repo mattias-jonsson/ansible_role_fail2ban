@@ -1,0 +1,84 @@
+# {{ ansible_managed }}
+
+# YOU SHOULD NOT MODIFY THIS FILE
+
+{% for jail in ansible_role_fail2ban_jails %}
+[{{ jail.name }}]
+{% if jail.comment is defined and jail.comment | length %}
+{{ jail.comment}}
+{% endif %}
+{% if jail.action is defined and jail.action | length %}
+action             = {{ jail.action }}
+{% endif %}
+{% if jail.action_ is defined and jail.action_ | length %}
+action_             = {{ jail.action_ }}
+{% endif %}
+{% if jail.backend is defined and jail.backend | length %}
+backend            = {{ jail.backend }}
+{% endif %}
+{% if jail.banaction is defined and jail.banaction | length %}
+banaction          = {{ jail.banaction }}
+{% endif %}
+{% if jail.banaction_allports is defined and jail.banaction_allports | length %}
+banaction_allports = {{ jail.banaction_allports }}
+{% endif %}
+{% if jail.bantime is defined and jail.bantime | length %}
+bantime            = {{ jail.bantime }}
+{% endif %}
+{% if jail.bantime_increment is defined and jail.bantime_increment | length %}
+bantime.increment  = {{ jail.bantime_increment | lower }}
+{% endif %}
+{% if jail.bantime_rndtime is defined and jail.bantime_rndtime | length %}
+bantime.rndtime    = {{ jail.bantime_rndtime }}
+{% endif %}
+{% if jail.blocktype is defined and jail.blocktype | length %}
+blocktype    = {{ jail.blocktype }}
+{% endif %}
+{% if jail.enabled is defined and jail.enabled | length %}
+enabled            = {{ jail.enabled | lower  }}
+{% endif %}
+{% if jail.failregex is defined and jail.failregex | length %}
+failregex          = {{ jail.failregex }}
+{% endif %}
+{% if jail.filter is defined and jail.filter | length %}
+filter             = {{ jail.filter | lower }}
+{% endif %}
+{% if jail.findtime is defined and jail.findtime | length %}
+findtime           = {{ jail.findtime }}
+{% endif %}
+{% if jail.ignorecommand is defined and jail.ignorecommand | length %}
+ignorecommand      = {{ jail.ignorecommand }}
+{% endif %}
+{% if jail.ignoreip is defined and jail.ignoreip | length %}
+ignoreip           = {{ jail.ignoreip }}
+{% endif %}
+{% if jail.ignoreregex is defined and jail.ignoreregex | length %}
+ignoreregex        = {{ jail.ignoreregex }}
+{% endif %}
+{% if jail.knocking_url is defined and jail.knocking_url | length %}
+knocking_url        = {{ jail.knocking_url }}
+{% endif %}
+{% if jail.logencoding is defined and jail.logencoding | length %}
+logencoding        = {{ jail.logencoding }}
+{% endif %}
+{% if jail.logpath is defined and jail.logpath | length %}
+logpath            = {{ jail.logpath }}
+{% endif %}
+{% if jail.maxmatches is defined and jail.maxmatches | string | length %}
+maxmatches         = {{ jail.maxmatches }}
+{% endif %}
+{% if jail.maxretry is defined and jail.maxretry | string | length %}
+maxretry           = {{ jail.maxretry }}
+{% endif %}
+{% if jail.port is defined and jail.port | string | length %}
+port               = {{ jail.port }}
+{% endif %}
+{% if jail.returntype is defined and jail.returntype | string | length %}
+returntype               = {{ jail.returntype }}
+{% endif %}
+{% if jail.usedns is defined and jail.usedns | length %}
+usedns             = {{ jail.usedns }}
+{% endif %}
+
+
+{% endfor %}

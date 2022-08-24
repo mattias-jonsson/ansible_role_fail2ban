@@ -1,0 +1,231 @@
+# {{ ansible_managed }}
+
+# YOU SHOULD NOT MODIFY THIS FILE
+
+[INCLUDES]
+
+{% if ansible_role_fail2ban_includes.before | length %}
+before = {{ ansible_role_fail2ban_includes.before }}
+{% endif %}
+
+[DEFAULT]
+
+#
+# MISC OPTIONS
+#
+
+# ansible_role_fail2ban_defaults_
+
+{% if ansible_role_fail2ban_defaults_bantime_increment | length %}
+bantime.increment = {{ ansible_role_fail2ban_defaults_bantime_increment }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_bantime_rndtime | length %}
+bantime.rndtime = {{ ansible_role_fail2ban_defaults_bantime_rndtime }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_bantime_maxtime | length %}
+bantime.maxtime = {{ ansible_role_fail2ban_defaults_bantime_maxtime }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_bantime_factor | length %}
+bantime.factor = {{ ansible_role_fail2ban_defaults_bantime_factor }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_bantime_formula | length %}
+bantime.formula = {{ ansible_role_fail2ban_defaults_bantime_formula }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_bantime_multipliers | length %}
+bantime.multipliers = {{ ansible_role_fail2ban_defaults_bantime_multipliers }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_bantime_overalljails | length %}
+bantime.overalljail = {{ ansible_role_fail2ban_defaults_bantime_overalljails }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_ignoreself | length %}
+ignoreself = {{ ansible_role_fail2ban_defaults_ignoreself }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_ignoreip | length %}
+ignoreip = {{ ansible_role_fail2ban_defaults_ignoreip }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_ignorecommand | length %}
+ignorecommand = {{ ansible_role_fail2ban_defaults_ignorecommand }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_bantime | length %}
+bantime  = {{ ansible_role_fail2ban_defaults_bantime }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_findtime | length %}
+findtime  = {{ ansible_role_fail2ban_defaults_findtime }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_maxretry | length %}
+maxretry = {{ ansible_role_fail2ban_defaults_maxretry }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_maxmatches | length %}
+maxmatches = {{ ansible_role_fail2ban_defaults_maxmatches }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_backend | length %}
+backend = {{ ansible_role_fail2ban_defaults_backend }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_usedns | length %}
+usedns = {{ ansible_role_fail2ban_defaults_usedns }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_logencoding | length %}
+logencoding = {{ ansible_role_fail2ban_defaults_logencoding }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_enabled | length %}
+enabled = {{ ansible_role_fail2ban_defaults_enabled }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_mode | length %}
+mode = {{ ansible_role_fail2ban_defaults_mode }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_filter | length %}
+filter = {{ ansible_role_fail2ban_defaults_filter }}
+{% endif %}
+
+#
+# ACTIONS
+#
+
+{% if ansible_role_fail2ban_defaults_destemail | length %}
+destemail = {{ ansible_role_fail2ban_defaults_destemail }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_sender | length %}
+sender = {{ ansible_role_fail2ban_defaults_sender }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_mta | length %}
+mta = {{ ansible_role_fail2ban_defaults_mta }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_protocol | length %}
+protocol = {{ ansible_role_fail2ban_defaults_protocol }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_chain | length %}
+chain = {{ ansible_role_fail2ban_defaults_chain }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_port | length %}
+port = {{ ansible_role_fail2ban_defaults_port }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_fail2ban_agent | length %}
+fail2ban_agent = {{ ansible_role_fail2ban_defaults_fail2ban_agent }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_banaction | length %}
+banaction = {{ ansible_role_fail2ban_defaults_banaction }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_banaction_allports  | length %}
+banaction_allports = {{ ansible_role_fail2ban_defaults_banaction_allports }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_action_ | length %}
+action_ = {{ ansible_role_fail2ban_defaults_action_ }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_action_mw | length %}
+action_mw = {{ ansible_role_fail2ban_defaults_action_mw }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_action_mwl | length %}
+action_mwl = {{ ansible_role_fail2ban_defaults_action_mwl }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_action_xarf | length %}
+action_xarf = {{ ansible_role_fail2ban_defaults_action_xarf }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_action_cf_mwl | length %}
+action_cf_mwl = {{ ansible_role_fail2ban_defaults_action_cf_mwl }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_action_blocklist_de | length %}
+action_blocklist_de = {{ ansible_role_fail2ban_defaults_action_blocklist_de }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_action_badips | length %}
+action_badips = {{ ansible_role_fail2ban_defaults_action_badips }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_action_badips_report | length %}
+action_badips_report = {{ ansible_role_fail2ban_defaults_action_badips_report }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_action_abuseipdb | length %}
+action_abuseipdb = {{ ansible_role_fail2ban_defaults_action_abuseipdb }}
+{% endif %}
+{% if ansible_role_fail2ban_defaults_action | length %}
+action = {{ ansible_role_fail2ban_defaults_action }}
+{% endif %}
+
+#
+# JAILS
+#
+
+{% for jail in ansible_role_fail2ban_default_jails %}
+[{{ jail.name }}]
+{% if jail.comment is defined and jail.comment | length %}
+{{ jail.comment }}
+{% endif %}
+{% if jail.action is defined %}
+action             = {{ jail.action }}
+{% endif %}
+{% if jail.action_ is defined %}
+action_             = {{ jail.action_ }}
+{% endif %}
+{% if jail.backend is defined %}
+backend            = {{ jail.backend }}
+{% endif %}
+{% if jail.banaction is defined %}
+banaction          = {{ jail.banaction }}
+{% endif %}
+{% if jail.banaction_allports is defined %}
+banaction.allports = {{ jail.banaction_allports }}
+{% endif %}
+{% if jail.bantime is defined %}
+bantime            = {{ jail.bantime }}
+{% endif %}
+{% if jail.bantime_increment is defined %}
+bantime.increment  = {{ jail.bantime_increment }}
+{% endif %}
+{% if jail.bantime_rndtime is defined %}
+bantime.rndtime    = {{ jail.bantime_rndtime }}
+{% endif %}
+{% if jail.blocktype is defined %}
+blocktype    = {{ jail.blocktype }}
+{% endif %}
+{% if jail.failregex is defined %}
+failregex          = {{ jail.failregex }}
+{% endif %}
+{% if jail.filter is defined %}
+filter             = {{ jail.filter }}
+{% endif %}
+{% if jail.findtime is defined %}
+findtime           = {{ jail.findtime }}
+{% endif %}
+{% if jail.ignorecommand is defined %}
+ignorecommand      = {{ jail.ignorecommand }}
+{% endif %}
+{% if jail.ignoreip is defined %}
+ignoreip           = {{ jail.ignoreip }}
+{% endif %}
+{% if jail.ignoreregex is defined %}
+ignoreregex        = {{ jail.ignoreregex }}
+{% endif %}
+{% if jail.knocking_url is defined %}
+knocking_url        = {{ jail.knocking_url }}
+{% endif %}
+{% if jail.logencoding is defined %}
+logencoding        = {{ jail.logencoding }}
+{% endif %}
+{% if jail.logpath is defined %}
+logpath            = {{ jail.logpath }}
+{% endif %}
+{% if jail.maxmatches is defined %}
+maxmatches         = {{ jail.maxmatches }}
+{% endif %}
+{% if jail.maxretry is defined %}
+maxretry           = {{ jail.maxretry }}
+{% endif %}
+{% if jail.mode is defined %}
+mode           = {{ jail.mode }}
+{% endif %}
+{% if jail.port is defined %}
+port               = {{ jail.port }}
+{% endif %}
+{% if jail.returntype is defined %}
+returntype          = {{ jail.returntype }}
+{% endif %}
+{% if jail.tcpport is defined %}
+tcpport          = {{ jail.tcpport }}
+{% endif %}
+{% if jail.udpport is defined %}
+udpport          = {{ jail.udpport }}
+{% endif %}
+{% if jail.usedns is defined %}
+usedns             = {{ jail.usedns }}
+{% endif %}
+
+
+{% endfor %}

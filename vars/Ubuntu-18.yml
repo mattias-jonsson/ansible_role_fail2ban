@@ -1,0 +1,552 @@
+---
+
+ansible_role_fail2ban_packages:
+  - fail2ban
+
+ansible_role_fail2ban_includes:
+  before: paths-debian.conf
+
+
+ansible_role_fail2ban_dist_defaults_action_: '%(banaction)s[name=%(__name__)s, bantime="%(bantime)s", port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]'
+ansible_role_fail2ban_dist_defaults_action_abuseipdb: 'abuseipdb'
+ansible_role_fail2ban_dist_defaults_action_badips_report: 'badips[category="%(__name__)s", agent="%(fail2ban_agent)s"]'
+ansible_role_fail2ban_dist_defaults_action_badips: 'badips.py[category="%(__name__)s", banaction="%(banaction)s", agent="%(fail2ban_agent)s"]'
+ansible_role_fail2ban_dist_defaults_action_blocklist_de: 'blocklist_de[email="%(sender)s", service=%(filter)s, apikey="%(blocklist_de_apikey)s", agent="%(fail2ban_agent)s"]'
+ansible_role_fail2ban_dist_defaults_action_cf_mwl: |
+  cloudflare[cfuser="%(cfemail)s", cftoken="%(cfapikey)s"]
+                  %(mta)s-whois-lines[name=%(__name__)s, sender="%(sender)s", dest="%(destemail)s", logpath=%(logpath)s, chain="%(chain)s"]
+ansible_role_fail2ban_dist_defaults_action_mw: |
+  %(banaction)s[name=%(__name__)s, bantime="%(bantime)s", port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+              %(mta)s-whois[name=%(__name__)s, sender="%(sender)s", dest="%(destemail)s", protocol="%(protocol)s", chain="%(chain)s"]
+ansible_role_fail2ban_dist_defaults_action_mwl: |
+  %(banaction)s[name=%(__name__)s, bantime="%(bantime)s", port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+                %(mta)s-whois-lines[name=%(__name__)s, sender="%(sender)s", dest="%(destemail)s", logpath=%(logpath)s, chain="%(chain)s"]
+ansible_role_fail2ban_dist_defaults_action_xarf: |
+  %(banaction)s[name=%(__name__)s, bantime="%(bantime)s", port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+                xarf-login-attack[service=%(__name__)s, sender="%(sender)s", logpath=%(logpath)s, port="%(port)s"]
+ansible_role_fail2ban_dist_defaults_action: '%(action_)s'
+ansible_role_fail2ban_dist_defaults_backend: "auto"
+ansible_role_fail2ban_dist_defaults_banaction_allports: "iptables-allports"
+ansible_role_fail2ban_dist_defaults_banaction: "iptables-multiport"
+ansible_role_fail2ban_dist_defaults_bantime_factor:
+ansible_role_fail2ban_dist_defaults_bantime_formula:
+ansible_role_fail2ban_dist_defaults_bantime_increment:
+ansible_role_fail2ban_dist_defaults_bantime_maxtime:
+ansible_role_fail2ban_dist_defaults_bantime_multipliers:
+ansible_role_fail2ban_dist_defaults_bantime_overalljails:
+ansible_role_fail2ban_dist_defaults_bantime_rndtime:
+ansible_role_fail2ban_dist_defaults_bantime: "10m"
+ansible_role_fail2ban_dist_defaults_chain: "<known/chain>"
+ansible_role_fail2ban_dist_defaults_destemail: "root@localhost"
+ansible_role_fail2ban_dist_defaults_enabled: "false"
+ansible_role_fail2ban_dist_defaults_fail2ban_agent: "Fail2Ban/%(fail2ban_version)s"
+ansible_role_fail2ban_dist_defaults_filter: "%(__name__)s[mode=%(mode)s]"
+ansible_role_fail2ban_dist_defaults_findtime: "10m"
+ansible_role_fail2ban_dist_defaults_ignorecommand:
+ansible_role_fail2ban_dist_defaults_ignoreip:
+ansible_role_fail2ban_dist_defaults_ignoreself:
+ansible_role_fail2ban_dist_defaults_logencoding: "auto"
+ansible_role_fail2ban_dist_defaults_maxmatches:
+ansible_role_fail2ban_dist_defaults_maxretry: "5"
+ansible_role_fail2ban_dist_defaults_mode: "normal"
+ansible_role_fail2ban_dist_defaults_mta: "sendmail"
+ansible_role_fail2ban_dist_defaults_port: "0:65535"
+ansible_role_fail2ban_dist_defaults_protocol: "tcp"
+ansible_role_fail2ban_dist_defaults_sender: "root@<fq-hostname>"
+ansible_role_fail2ban_dist_defaults_usedns: "warn"
+
+ansible_role_fail2ban_default_jails:
+  - name: 'sshd'
+    comment: |
+      # To use more aggressive sshd modes set filter parameter "mode" in jail.local:
+      # normal (default), ddos, extra or aggressive (combines all).
+      # See "tests/files/logs/sshd" or "filter.d/sshd.conf" for usage example and details.
+      # mode   = normal
+    port: 'ssh'
+    logpath: '%(sshd_log)s'
+    backend: '%(sshd_backend)s'
+
+  - name: 'dropbear'
+    port: 'ssh'
+    logpath: '%(dropbear_log)s'
+    backend: '%(dropbear_backend)s'
+
+  - name: 'selinux-ssh'
+    port: 'ssh'
+    logpath: '%(auditd_log)s'
+
+  - name: 'apache-auth'
+    port: 'http,https'
+    logpath: '%(apache_error_log)s'
+
+  - name: 'apache-badbots'
+    comment: |
+      # Ban hosts which agent identifies spammer robots crawling the web
+      # for email addresses. The mail outputs are buffered. 
+    port: 'http,https'
+    logpath: '%(apache_access_log)s'
+    bantime: '48h'
+    maxretry: '1'
+
+  - name: 'apache-noscript'
+    port: 'http,https'
+    logpath: '%(apache_error_log)s'
+
+  - name: 'apache-overflows'
+    port: 'http,https'
+    logpath: '%(apache_error_log)s'
+    maxretry: '2'
+
+  - name: 'apache-nohome'
+    port: 'http,https'
+    logpath: '%(apache_error_log)s'
+    maxretry: '2'
+
+  - name: 'apache-botsearch'
+    port: 'http,https'
+    logpath: '%(apache_error_log)s'
+    maxretry: '2'
+
+  - name: 'apache-fakegooglebot'
+    port: 'http,https'
+    logpath: '%(apache_access_log)s'
+    maxretry: '1'
+    ignorecommand: '%(ignorecommands_dir)s/apache-fakegooglebot <ip>'
+
+  - name: 'apache-modsecurity'
+    port: 'http,https'
+    logpath: '%(apache_error_log)s'
+    maxretry: 2
+
+  - name: 'apache-shellshock'
+    port: 'http,https'
+    logpath: '%(apache_error_log)s'
+    maxretry: '1'
+
+  - name: 'openhab-auth'
+    filter: 'openhab'
+    action: 'iptables-allports[name=NoAuthFailures]'
+    logpath: '/opt/openhab/logs/request.log'
+
+  - name: 'nginx-http-auth'
+    port: 'http,https'
+    logpath: '%(nginx_error_log)s'
+
+  - name: 'nginx-limit-req'
+    comment: |
+      # To use 'nginx-limit-req' jail you should have `ngx_http_limit_req_module` 
+      # and define `limit_req` and `limit_req_zone` as described in nginx documentation
+      # http://nginx.org/en/docs/http/ngx_http_limit_req_module.html
+      # or for example see in 'config/filter.d/nginx-limit-req.conf'
+    port: 'http,https'
+    logpath: '%(nginx_error_log)s'
+
+  - name: 'nginx-botsearch'
+    port: 'http,https'
+    logpath: '%(nginx_error_log)s'
+    maxretry: '2'
+
+  - name: 'php-url-fopen'
+    comment: |
+      # Ban attackers that try to use PHP's URL-fopen() functionality
+      # through GET/POST variables. - Experimental, with more than a year
+      # of usage in production environments.
+    port: 'http,https'
+    logpath: |
+      %(nginx_access_log)s
+                     %(apache_access_log)s
+
+  - name: 'suhosin'
+    port: 'http,https'
+    logpath: '%(suhosin_log)s'
+
+  - name: 'lighttpd-auth'
+    comment: |
+      # Same as above for Apache's mod_auth
+      # It catches wrong authentifications
+    port: 'http,https'
+    logpath: '%(lighttpd_error_log)s'
+
+  - name: 'roundcube-auth'
+    comment: |
+      # Use following line in your jail.local if roundcube logs to journal.
+      # backend = %(syslog_backend)s
+    port: 'http,https'
+    logpath: '%(roundcube_errors_log)s'
+
+  - name: 'openwebmail'
+    port: 'http,https'
+    logpath: '/var/log/openwebmail.log'
+
+  - name: 'horde'
+    port: 'http,https'
+    logpath: '/var/log/horde/horde.log'
+
+  - name: 'groupoffice'
+    port: 'http,https'
+    logpath: '/home/groupoffice/log/info.log'
+
+  - name: 'sogo-auth'
+    comment: |
+      # Monitor SOGo groupware server
+      # without proxy this would be:
+      # port    = 20000
+    port: 'http,https'
+    logpath: '/var/log/sogo/sogo.log'
+
+  - name: 'tine20'
+    logpath: '/var/log/tine20/tine20.log'
+    port: 'http,https'
+
+  - name: 'drupal-auth'
+    port: 'http,https'
+    logpath: '%(syslog_daemon)s'
+    backend: '%(syslog_backend)s'
+
+  - name: 'guacamole'
+    port: 'http,https'
+    logpath: '/var/log/tomcat*/catalina.out'
+
+  - name: 'monit'
+    comment: |
+      # Ban clients brute-forcing the monit gui login
+    port: '2812'
+    logpath: '/var/log/monit'
+
+  - name: 'webmin-auth'
+    port: '10000'
+    logpath: '%(syslog_authpriv)s'
+    backend: '%(syslog_backend)s'
+
+  - name: 'froxlor-auth'
+    port: 'http,https'
+    logpath: '%(syslog_authpriv)s'
+    backend: '%(syslog_backend)s'
+
+  - name: 'squid'
+    port: '80,443,3128,8080'
+    logpath: '/var/log/squid/access.log'
+
+  - name: 'squid'
+    port: '80,443,3128,8080'
+    logpath: '/var/log/squid/access.log'
+
+  - name: '3proxy'
+    port: '3128'
+    logpath: '/var/log/3proxy.log'
+
+  - name: 'proftpd'
+    port: 'ftp,ftp-data,ftps,ftps-data'
+    logpath: '%(proftpd_log)s'
+    backend: '%(proftpd_backend)s'
+
+  - name: 'pure-ftpd'
+    port: 'ftp,ftp-data,ftps,ftps-data'
+    logpath: '%(pureftpd_log)s'
+    backend: '%(pureftpd_backend)s'
+
+  - name: 'gssftpd'
+    port: 'ftp,ftp-data,ftps,ftps-data'
+    logpath: '%(syslog_daemon)s'
+    backend: '%(syslog_backend)s'
+
+  - name: 'wuftpd'
+    port: 'ftp,ftp-data,ftps,ftps-data'
+    logpath: '%(wuftpd_log)s'
+    backend: '%(wuftpd_backend)s'
+
+  - name: 'vsftpd'
+    comment: |
+      # or overwrite it in jails.local to be
+      # logpath = %(syslog_authpriv)s
+      # if you want to rely on PAM failed login attempts
+      # vsftpd's failregex should match both of those formats
+    port: 'ftp,ftp-data,ftps,ftps-data'
+    logpath: '%(vsftpd_log)s'
+
+  - name: 'assp'
+    comment: |
+      # ASSP SMTP Proxy Jail
+    port: 'smtp,465,submission'
+    logpath: '/root/path/to/assp/logs/maillog.txt'
+
+  - name: 'courier-smtp'
+    port: 'smtp,465,submission'
+    logpath: '%(syslog_mail)s'
+    backend: '%(syslog_backend)s'
+
+  - name: 'postfix'
+    comment: |
+      # To use another modes set filter parameter "mode" in jail.local
+    mode: 'more'
+    port: 'smtp,465,submission'
+    logpath: '%(postfix_log)s'
+    backend: '%(postfix_backend)s'
+
+  - name: 'postfix-rbl'
+    filter: 'postfix[mode=rbl]'
+    port: 'smtp,465,submission'
+    logpath: '%(postfix_log)s'
+    backend: '%(postfix_backend)s'
+    maxretry: '1'
+
+  - name: 'sendmail-auth'
+    port: 'submission,465,smtp'
+    logpath: '%(syslog_mail)s'
+    backend: '%(syslog_backend)s'
+
+  - name: 'sendmail-reject'
+    comment: |
+      # To use more aggressive modes set filter parameter "mode" in jail.local:
+      # normal (default), extra or aggressive
+      # See "tests/files/logs/sendmail-reject" or "filter.d/sendmail-reject.conf" for usage example and details.
+      # mode    = normal
+    port: 'smtp,465,submission'
+    logpath: '%(syslog_mail)s'
+    backend: '%(syslog_backend)s'
+
+  - name: 'qmail-rbl'
+    filter: 'qmail'
+    port: 'smtp,465,submission'
+    logpath: '/service/qmail/log/main/current'
+
+  - name: 'dovecot'
+    comment: |
+      # dovecot defaults to logging to the mail syslog facility
+      # but can be set by syslog_facility in the dovecot configuration.
+    port: 'pop3,pop3s,imap,imaps,submission,465,sieve'
+    logpath: '%(dovecot_log)s'
+    backend: '%(dovecot_backend)s'
+
+  - name: 'sieve'
+    port: 'smtp,465,submission'
+    logpath: '%(dovecot_log)s'
+    backend: '%(dovecot_backend)s'
+
+  - name: 'solid-pop3d'
+    port: 'pop3,pop3s'
+    logpath: '%(solidpop3d_log)s'
+
+  - name: 'exim'
+    comment: |
+      # see filter.d/exim.conf for further modes supported from filter:
+      # mode = normal
+    port: 'smtp,465,submission'
+    logpath: '%(exim_main_log)s'
+
+  - name: 'exim-spam'
+    port: 'smtp,465,submission'
+    logpath: '%(exim_main_log)s'
+
+  - name: 'courier-auth'
+    port: 'smtp,465,submission,imap,imaps,pop3,pop3s'
+    logpath: '%(syslog_mail)s'
+    backend: '%(syslog_backend)s'
+
+  - name: 'postfix-sasl'
+    comment: |
+      # You might consider monitoring /var/log/mail.warn instead if you are
+      # running postfix since it would provide the same log lines at the
+      # "warn" level but overall at the smaller filesize.
+    filter: 'postfix[mode=auth]'
+    port: 'smtp,465,submission,imap,imaps,pop3,pop3s'
+    logpath: '%(postfix_log)s'
+    backend: '%(postfix_backend)s'
+
+  - name: 'perdition'
+    port: 'imap,imaps,pop3,pop3s'
+    logpath: '%(syslog_mail)s'
+    backend: '%(syslog_backend)s'
+
+  - name: 'squirrelmail'
+    port: 'smtp,465,submission,imap,imap2,imaps,pop3,pop3s,http,https,socks'
+    logpath: '/var/lib/squirrelmail/prefs/squirrelmail_access_log'
+
+  - name: 'cyrus-imap'
+    port: 'imap,imaps'
+    logpath: '%(syslog_mail)s'
+    backend: '%(syslog_backend)s'
+
+  - name: 'uwimap-auth'
+    port: 'imap,imaps'
+    logpath: '%(syslog_mail)s'
+    backend: '%(syslog_backend)s'
+
+  - name: 'named-refused'
+    port: 'domain,953'
+    logpath: '/var/log/named/security.log'
+
+  - name: 'nsd'
+    port: '53'
+    action: |
+      %(banaction)s[name=%(__name__)s-tcp, port="%(port)s", protocol="tcp", chain="%(chain)s", actname=%(banaction)s-tcp]
+                        %(banaction)s[name=%(__name__)s-udp, port="%(port)s", protocol="udp", chain="%(chain)s", actname=%(banaction)s-udp]
+    logpath: '/var/log/nsd.log'
+
+
+  - name: 'asterisk'
+    port: '5060,5061'
+    action: |
+      %(banaction)s[name=%(__name__)s-tcp, port="%(port)s", protocol="tcp", chain="%(chain)s", actname=%(banaction)s-tcp]
+                  %(banaction)s[name=%(__name__)s-udp, port="%(port)s", protocol="udp", chain="%(chain)s", actname=%(banaction)s-udp]
+                  %(mta)s-whois[name=%(__name__)s, dest="%(destemail)s"]
+    logpath: '/var/log/asterisk/messages'
+    maxretry: '10'
+
+  - name: 'freeswitch'
+    port: '5060,5061'
+    action: |  
+      %(banaction)s[name=%(__name__)s-tcp, port="%(port)s", protocol="tcp", chain="%(chain)s", actname=%(banaction)s-tcp]
+                  %(banaction)s[name=%(__name__)s-udp, port="%(port)s", protocol="udp", chain="%(chain)s", actname=%(banaction)s-udp]
+                  %(mta)s-whois[name=%(__name__)s, dest="%(destemail)s"]
+    logpath: '/var/log/freeswitch.log'
+    maxretry: '10'
+
+  - name: 'mysqld-auth'
+    comment: |
+      # To log wrong MySQL access attempts add to /etc/my.cnf in [mysqld] or
+      # equivalent section:
+      # log-warning = 2
+      #
+      # for syslog (daemon facility)
+      # [mysqld_safe]
+      # syslog
+      #
+      # for own logfile
+      # [mysqld]
+      # log-error=/var/log/mysqld.log
+    port: '3306'
+    logpath: '%(mysql_log)s'
+    backend: '%(mysql_backend)s'
+
+  - name: 'mongodb-auth'
+    comment: |
+      # Log wrong MongoDB auth (for details see filter 'filter.d/mongodb-auth.conf')
+      # change port when running with "--shardsvr" or "--configsvr" runtime operation
+    port: '27017'
+    logpath: '/var/log/mongodb/mongodb.log'
+
+  - name: 'recidive'
+    comment: |
+      # Jail for more extended banning of persistent abusers
+      # !!! WARNINGS !!!
+      # 1. Make sure that your loglevel specified in fail2ban.conf/.local
+      #    is not at DEBUG level -- which might then cause fail2ban to fall into
+      #    an infinite loop constantly feeding itself with non-informative lines
+      # 2. Increase dbpurgeage defined in fail2ban.conf to e.g. 648000 (7.5 days)
+      #    to maintain entries for failed logins for sufficient amount of time
+    logpath: '/var/log/fail2ban.log'
+    banaction: '%(banaction_allports)s'
+    bantime: '1w'
+    findtime: '1d'
+
+  - name: 'pam-generic'
+    comment: |
+      # pam-generic filter can be customized to monitor specific subset of 'tty's
+    banaction: '%(banaction_allports)s'
+    logpath: '%(syslog_authpriv)s'
+    backend: '%(syslog_backend)s'
+
+  - name: 'xinetd-fail'
+    banaction: 'iptables-multiport-log'
+    logpath: '%(syslog_daemon)s'
+    backend: '%(syslog_backend)s'
+    maxretry: '2'
+
+  - name: 'stunnel'
+    comment: |
+      # stunnel - need to set port for this
+    logpath: '/var/log/stunnel4/stunnel.log'
+
+  - name: 'ejabberd-auth'
+    port: '5222'
+    logpath: '/var/log/ejabberd/ejabberd.log'
+
+  - name: 'counter-strike'
+    comment: |
+      # Firewall: http://www.cstrike-planet.com/faq/6
+    logpath: '/opt/cstrike/logs/L[0-9]*.log'
+    tcpport: '27030,27031,27032,27033,27034,27035,27036,27037,27038,27039'
+    udpport: '1200,27000,27001,27002,27003,27004,27005,27006,27007,27008,27009,27010,27011,27012,27013,27014,27015'
+    action: |
+      %(banaction)s[name=%(__name__)s-tcp, port="%(tcpport)s", protocol="tcp", chain="%(chain)s", actname=%(banaction)s-tcp]
+                  %(banaction)s[name=%(__name__)s-udp, port="%(udpport)s", protocol="udp", chain="%(chain)s", actname=%(banaction)s-udp]
+
+  - name: 'nagios'
+    comment: |
+      # consider low maxretry and a long bantime
+      # nobody except your own Nagios server should ever probe nrpe
+    logpath: '%(syslog_daemon)s     ; nrpe.cfg may define a different log_facility'
+    backend: '%(syslog_backend)s'
+    maxretry: '1'
+
+  - name: 'oracleims'
+    comment: |
+      # see "oracleims" filter file for configuration requirement for Oracle IMS v6 and above
+    logpath: '/opt/sun/comms/messaging64/log/mail.log_current'
+    banaction: '%(banaction_allports)s'
+
+  - name: 'directadmin'
+    logpath: '/var/log/directadmin/login.log'
+    port: '2222'
+
+  - name: 'portsentry'
+    logpath: '/var/lib/portsentry/portsentry.history'
+    maxretry: '1'
+
+  - name: 'pass2allow-ftp'
+    comment: |
+      # this pass2allow example allows FTP traffic after successful HTTP authentication
+      # knocking_url variable must be overridden to some secret value in jail.local
+      # logpath refers to the access log of the website with HTTP auth
+    port: 'ftp,ftp-data,ftps,ftps-data'
+    knocking_url: '/knocking/'
+    filter: 'apache-pass[knocking_url="%(knocking_url)s"]'
+    logpath: '%(apache_access_log)s'
+    blocktype: 'RETURN'
+    returntype: 'DROP'
+    action: '%(action_)s[blocktype=%(blocktype)s, returntype=%(returntype)s]'
+    bantime: '1h'
+    maxretry: '1'
+    findtime: '1'
+
+  - name: 'murmur'
+    comment: |
+      # AKA mumble-server
+    port: '64738'
+    action: |
+      %(banaction)s[name=%(__name__)s-tcp, port="%(port)s", protocol=tcp, chain="%(chain)s", actname=%(banaction)s-tcp]
+                  %(banaction)s[name=%(__name__)s-udp, port="%(port)s", protocol=udp, chain="%(chain)s", actname=%(banaction)s-udp]
+    logpath: '/var/log/mumble-server/mumble-server.log'
+
+  - name: 'screensharingd'
+    logpath: '/var/log/system.log'
+    logencoding: 'utf-8'
+
+  - name: 'haproxy-http-auth'
+    comment: |
+      # HAProxy by default doesn't log to file you'll need to set it up to forward
+      # logs to a syslog server which would then write them to disk.
+      # See "haproxy-http-auth" filter for a brief cautionary note when setting
+      # maxretry and findtime.
+    logpath: '/var/log/haproxy.log'
+
+  - name: 'slapd'
+    port: 'ldap,ldaps'
+    logpath: '/var/log/slapd.log'
+
+  - name: 'domino-smtp'
+    port: 'smtp,ssmtp'
+    logpath: '/home/domino01/data/IBM_TECHNICAL_SUPPORT/console.log'
+
+  - name: 'phpmyadmin-syslog'
+    port: 'http,https'
+    logpath: '%(syslog_authpriv)s'
+    backend: '%(syslog_backend)s'
+
+  - name: 'zoneminder'
+    comment: |
+      # Zoneminder HTTP/HTTPS web interface auth
+      # Logs auth failures to apache2 error log
+    port: 'http,https'
+    logpath: '%(apache_error_log)s'
