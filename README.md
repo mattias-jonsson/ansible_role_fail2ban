@@ -1,8 +1,7 @@
 Ansible Role: ansible_role_fail2ban
 =========
 
-An Ansible role that installs and configures fail2ban.
-This role supports the following Linux distributions:
+Installs and configures fail2ban on the following Linux distributions:
 
 <ul>
 <li>CentOS 7/8
@@ -32,11 +31,11 @@ List of jails to configure and enable. Each jail can be configured with the foll
     
     ansible_role_fail2ban_defaults_action_:
 
-General purpose action. Please refer to the distribution defaults from the vars files in the `vars` folder.
+General purpose action. Please refer to the distribution defaults from the vars files in the vars folder.
 
     ansible_role_fail2ban_defaults_action_abuseipdb: abuseipdb
 
-Report ban via abuseipdb.com. See `action.d/abuseipdb.conf` for examples.
+Report ban via abuseipdb.com. See action.d/abuseipdb.conf for examples.
 
     ansible_role_fail2ban_defaults_action_badips_report:
 
@@ -52,19 +51,19 @@ Report ban via blocklist.de.
 
     ansible_role_fail2ban_defaults_action_cf_mwl:
 
-Ban IP on CloudFlare & send an e-mail with whois report and relevant log lines to the destemail.
+Ban IP on CloudFlare & send an e-mail with whois report and relevant log lines.
 
     ansible_role_fail2ban_defaults_action_mw:
 
-Ban & send an e-mail with whois report to the destemail.
+Ban & send an e-mail with whois report.
 
     ansible_role_fail2ban_defaults_action_mwl:
 
-Ban & send an e-mail with whois report and relevant log lines to the destemail.
+Ban & send an e-mail with whois report and relevant log lines.
 
     ansible_role_fail2ban_defaults_action_xarf:
 
-See the IMPORTANT note in action.d/xarf-login-attack for when to use this action. Ban & send a xarf e-mail to abuse contact of IP address and include relevant log lines to the destemail.
+See the IMPORTANT note in `action.d/xarf-login-attack` for when to use this action. Ban & send a xarf e-mail to abuse contact of IP address and include relevant log lines.
 
     ansible_role_fail2ban_defaults_action: %(action_)s
 
@@ -72,15 +71,15 @@ Choose default action. To change, just override value of 'action' with the inter
 
     ansible_role_fail2ban_defaults_backend: auto
 
-Specifies the backend used to get files modification. Available options are "pyinotify", "gamin", "polling", "systemd" and "auto".
+Specifies the backend used to get files modification. Available options are `pyinotify`, `gamin`, `polling`, `systemd` and `auto`.
 
     ansible_role_fail2ban_defaults_banaction_allports:
 
-the same as banaction but for some "allports" jails like "pam-generic" or "recidive" (default iptables-allports).
+the same as banaction but for some "allports" jails like "pam-generic" or "recidive" (default `iptables-allports`).
 
     ansible_role_fail2ban_defaults_banaction:
 
-banning action (default iptables-multiport) typically specified in the [DEFAULT] section for all jails. This parameter will be used by the standard substitution of action and can be redefined central in the [DEFAULT] section inside jail.local (to apply it to all jails at once) or separately in each jail, where this substitution will be used.
+banning action (default `iptables-multiport`) typically specified in the [DEFAULT] section for all jails. This parameter will be used by the standard substitution of action and can be redefined central in the [DEFAULT] section inside jail.local (to apply it to all jails at once) or separately in each jail, where this substitution will be used.
 
     ansible_role_fail2ban_defaults_bantime_factor:
 
@@ -207,7 +206,7 @@ Sender email address used solely for some actions
 Dependencies
 ------------
 
-This role is dependent on `https://github.com/mattias-jonsson/ansible_role_epel`.
+This role is dependent on https://github.com/mattias-jonsson/ansible_role_epel
 
 Example Playbook
 ----------------
