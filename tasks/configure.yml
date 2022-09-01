@@ -140,7 +140,7 @@
 
     - name: cleanup conf.d directories
       become: true
-      ansible.builtin.shell: mv "{{ item }}" "{{ item | dirname }}/{{ item | basename }}.{{ 99999 | random }}.{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S')}}.disabled"
+      ansible.builtin.shell: mv "{{ item }}" "{{ item | dirname }}/{{ item | basename }}.{{ 99999 | random }}.{{ lookup('pipe', 'date +%Y-%m-%d@%H:%M:%S') }}.disabled"
       with_items: "{{ ansible_role_fail2ban_cleanup_list }}"
       when: ansible_role_fail2ban_cleanup_list | length > 0
       notify: restart fail2ban
