@@ -8,18 +8,18 @@ dependencies:
 galaxy_info:
   author: Mattias Jonsson
   description: An Ansible role that installs and configures fail2ban.
-  min_ansible_version: 2.9.27
+  min_ansible_version: 2.13.0
   role_name: ansible_role_fail2ban
   license: MIT
   platforms:
-  - name: EL
-    versions:
-    - "7"
-    - "8"
-  - name: Fedora
-    versions:
-    - "34"
-  - name: Debian
-    versions:
-    - buster
-    - bullseye
+    - name: EL
+      versions:
+        - "7"
+        - "8"
+    - name: Fedora
+      versions:
+        - "34"
+    - name: Debian
+      versions:
+        - buster
+        - bullseye

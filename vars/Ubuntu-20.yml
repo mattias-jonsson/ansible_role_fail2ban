@@ -134,7 +134,7 @@ ansible_role_fail2ban_default_jails:
 
   - name: 'nginx-limit-req'
     comment: |
-      # To use 'nginx-limit-req' jail you should have `ngx_http_limit_req_module` 
+      # To use 'nginx-limit-req' jail you should have `ngx_http_limit_req_module`
       # and define `limit_req` and `limit_req_zone` as described in nginx documentation
       # http://nginx.org/en/docs/http/ngx_http_limit_req_module.html
       # or for example see in 'config/filter.d/nginx-limit-req.conf'
@@ -231,7 +231,7 @@ ansible_role_fail2ban_default_jails:
     backend: '%(syslog_backend)s'
 
   - name: 'squid'
-    port:  '80,443,3128,8080'
+    port: '80,443,3128,8080'
     logpath: '/var/log/squid/access.log'
 
   - name: '3proxy'

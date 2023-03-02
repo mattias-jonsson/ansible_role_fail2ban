@@ -3,7 +3,6 @@
 ansible_role_fail2ban_cleanup: false
 ansible_role_fail2ban_jails: []
 
-
 ansible_role_fail2ban_defaults_action_: '{{ ansible_role_fail2ban_dist_defaults_action_ | default(None) }}'
 ansible_role_fail2ban_defaults_action_abuseipdb: '{{ ansible_role_fail2ban_dist_defaults_action_abuseipdb | default(None) }}'
 ansible_role_fail2ban_defaults_action_badips_report: '{{ ansible_role_fail2ban_dist_defaults_action_badips_report | default(None) }}'
@@ -22,7 +21,7 @@ ansible_role_fail2ban_defaults_bantime_formula: '{{ ansible_role_fail2ban_dist_d
 ansible_role_fail2ban_defaults_bantime_increment: '{{ ansible_role_fail2ban_dist_defaults_bantime_increment | default(None) }}'
 ansible_role_fail2ban_defaults_bantime_maxtime: '{{ ansible_role_fail2ban_dist_defaults_bantime_maxtime | default(None) }}'
 ansible_role_fail2ban_defaults_bantime_multipliers: '{{ ansible_role_fail2ban_dist_defaults_bantime_multipliers | default(None) }}'
-ansible_role_fail2ban_defaults_bantime_overalljails: '{{ ansible_role_fail2ban_dist_defaults_bantime_overalljails| default(None) }}'
+ansible_role_fail2ban_defaults_bantime_overalljails: '{{ ansible_role_fail2ban_dist_defaults_bantime_overalljails | default(None) }}'
 ansible_role_fail2ban_defaults_bantime_rndtime: '{{ ansible_role_fail2ban_dist_defaults_bantime_rndtime | default(None) }}'
 ansible_role_fail2ban_defaults_bantime: '{{ ansible_role_fail2ban_dist_defaults_bantime | default(None) }}'
 ansible_role_fail2ban_defaults_chain: '{{ ansible_role_fail2ban_dist_defaults_chain | default(None) }}'

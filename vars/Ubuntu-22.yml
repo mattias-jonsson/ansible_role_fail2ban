@@ -134,7 +134,7 @@ ansible_role_fail2ban_default_jails:
 
   - name: 'nginx-limit-req'
     comment: |
-      # To use 'nginx-limit-req' jail you should have `ngx_http_limit_req_module` 
+      # To use 'nginx-limit-req' jail you should have `ngx_http_limit_req_module`
       # and define `limit_req` and `limit_req_zone` as described in nginx documentation
       # http://nginx.org/en/docs/http/ngx_http_limit_req_module.html
       # or for example see in 'config/filter.d/nginx-limit-req.conf'
@@ -168,7 +168,7 @@ ansible_role_fail2ban_default_jails:
     logpath: '%(lighttpd_error_log)s'
 
   - name: 'roundcube-auth'
-    comment:  |
+    comment: |
       # Use following line in your jail.local if roundcube logs to journal.
       #backend = %(syslog_backend)s
     port: 'http,https'
@@ -389,7 +389,7 @@ ansible_role_fail2ban_default_jails:
 
   - name: 'asterisk'
     port: '5060,5061'
-    action_: | 
+    action_: |
       %(default/action_)s[name=%(__name__)s-tcp, protocol="tcp"]
                         %(default/action_)s[name=%(__name__)s-udp, protocol="udp"]
     logpath: '/var/log/asterisk/messages'
